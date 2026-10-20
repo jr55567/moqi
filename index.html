@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06070d">
-<title>莫欺少年 · 修复版下载</title>
+<title>莫欺少年 · 打开方式</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
-  margin:0;padding:28px 20px 44px;
+  margin:0;padding:30px 20px 46px;
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
   background:#06070d;color:#e8ecf5;min-height:100vh;
-  background-image:radial-gradient(900px 460px at 50% -8%,rgba(0,229,255,.14),transparent 68%),
-                   radial-gradient(700px 400px at 90% 100%,rgba(255,0,128,.10),transparent 70%);
+  background-image:radial-gradient(900px 460px at 50% -8%,rgba(0,229,255,.15),transparent 68%),
+                   radial-gradient(700px 400px at 90% 100%,rgba(255,0,128,.09),transparent 70%);
 }
 .wrap{max-width:520px;margin:0 auto}
 .tag{
@@ -20,126 +20,125 @@ body{
   font-size:11px;letter-spacing:.14em;font-weight:700;
   color:#0a0e16;background:linear-gradient(92deg,#00e5ff,#7af7c8);
 }
-h1{
-  font-size:25px;line-height:1.32;margin:16px 0 8px;font-weight:800;
-  letter-spacing:-.01em;
-}
+h1{font-size:25px;line-height:1.32;margin:16px 0 8px;font-weight:800;letter-spacing:-.01em}
 h1 em{font-style:normal;color:#00e5ff}
-.lead{font-size:14px;line-height:1.72;color:#9aa4ba;margin:0 0 24px}
+.lead{font-size:14px;line-height:1.72;color:#9aa4ba;margin:0 0 22px}
+
+.card{
+  background:rgba(255,255,255,.032);
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:16px;padding:18px;margin-bottom:14px;
+}
+.card.primary{
+  border-color:rgba(0,229,255,.34);
+  background:linear-gradient(180deg,rgba(0,229,255,.075),rgba(0,229,255,.02));
+}
+.card h2{
+  font-size:15px;margin:0 0 4px;font-weight:800;display:flex;align-items:center;gap:8px;
+}
+.badge{
+  font-size:10px;padding:2px 7px;border-radius:5px;font-weight:800;letter-spacing:.06em;
+  background:rgba(0,229,255,.16);color:#00e5ff;
+}
+.card p.desc{font-size:12.8px;line-height:1.68;color:#8b96ab;margin:6px 0 14px}
 
 .btn{
   display:flex;align-items:center;justify-content:center;gap:9px;
-  width:100%;padding:18px;border-radius:15px;border:0;
-  font-size:17px;font-weight:800;color:#06070d;text-decoration:none;
+  width:100%;padding:16px;border-radius:13px;border:0;
+  font-size:16px;font-weight:800;color:#06070d;text-decoration:none;
   background:linear-gradient(94deg,#00e5ff,#63f2d0 58%,#7af7c8);
-  box-shadow:0 10px 30px rgba(0,229,255,.28);
+  box-shadow:0 8px 26px rgba(0,229,255,.24);
   transition:transform .14s;
 }
 .btn:active{transform:scale(.978)}
-.btn svg{width:19px;height:19px;flex:none}
-.meta{
-  text-align:center;font-size:12px;color:#5f6b82;
-  margin:11px 0 26px;letter-spacing:.02em;
+.btn.ghost{
+  background:rgba(255,255,255,.055);color:#c9d3e2;
+  border:1px solid rgba(255,255,255,.11);box-shadow:none;
 }
+.btn svg{width:18px;height:18px;flex:none}
 
 .sec{
-  background:rgba(255,255,255,.032);
-  border:1px solid rgba(255,255,255,.075);
-  border-radius:15px;padding:17px 17px 15px;margin-bottom:13px;
+  background:rgba(255,255,255,.028);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:16px;margin-bottom:13px;
 }
-.sec h2{
-  font-size:12px;margin:0 0 12px;letter-spacing:.13em;
-  color:#00e5ff;font-weight:800;
+.sec h3{
+  font-size:11.5px;margin:0 0 11px;letter-spacing:.13em;color:#00e5ff;font-weight:800;
 }
-.step{display:flex;gap:11px;margin-bottom:12px}
+.step{display:flex;gap:10px;margin-bottom:10px}
 .step:last-child{margin-bottom:0}
 .num{
-  flex:none;width:21px;height:21px;border-radius:6px;
+  flex:none;width:20px;height:20px;border-radius:6px;
   background:rgba(0,229,255,.13);color:#00e5ff;
   font-size:11px;font-weight:800;
   display:flex;align-items:center;justify-content:center;margin-top:1px;
 }
-.step p{margin:0;font-size:13.5px;line-height:1.66;color:#b8c2d4}
-.step p b{color:#e8ecf5;font-weight:700}
+.step p{margin:0;font-size:13px;line-height:1.66;color:#b8c2d4}
+.step p b{color:#e8ecf5}
 
-.path{
-  font-size:12.5px;line-height:1.7;color:#8b96ab;
-  background:rgba(0,0,0,.3);border-radius:8px;
-  padding:9px 11px;margin:7px 0 0;
+.note{
+  font-size:12px;line-height:1.7;color:#6e7a90;
+  padding:12px 14px;border-left:2px solid rgba(0,229,255,.3);
+  background:rgba(0,229,255,.03);border-radius:0 8px 8px 0;margin-bottom:14px;
 }
-.path b{color:#63f2d0;font-weight:600}
+.note b{color:#9fb0c9}
 
-.warn{
-  display:flex;gap:10px;align-items:flex-start;
-  background:rgba(255,176,32,.075);
-  border:1px solid rgba(255,176,32,.22);
-  border-radius:13px;padding:14px 15px;margin-bottom:13px;
-}
-.warn svg{width:16px;height:16px;flex:none;margin-top:2px;stroke:#ffb020}
-.warn p{margin:0;font-size:12.8px;line-height:1.7;color:#d9c08c}
-.warn p b{color:#ffcb5c}
-
-.q{font-size:13.5px;line-height:1.72;color:#b8c2d4;margin:0 0 11px}
-.q:last-child{margin-bottom:0}
-.q b{color:#e8ecf5}
-.q code{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:12px;background:rgba(0,229,255,.1);
-  color:#7af7c8;padding:1.5px 5px;border-radius:4px;
-}
-footer{
-  text-align:center;font-size:11.5px;line-height:1.8;
-  color:#414b5e;margin-top:26px;
-}
+footer{text-align:center;font-size:11.5px;line-height:1.8;color:#414b5e;margin-top:24px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <span class="tag">安卓版 · 修复朗读</span>
-  <h1>莫欺少年<em> 修复版</em></h1>
-  <p class="lead">这次修好了音色选择的问题。手机上就算没装英文语音包，也会自动用中文音色读出来，不会再没声音。重新下载覆盖安装。</p>
+  <span class="tag">先网页 后安装</span>
+  <h1>莫欺少年<em> 两种打开方式</em></h1>
+  <p class="lead">先用浏览器打开验证能出声，确认没问题再加到手机桌面。之前的问题出在安装包外壳，浏览器这条路一直是对的。</p>
 
-  <a class="btn" href="https://autoglm-agent.aminer.cn/auto_fly/9d5ada4d-cb64-4e31-8ea6-ebc559111f81/moqi-v6.apk" download="moqi-v6.apk">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
-    点击下载安装包
-  </a>
-  <div class="meta">4.11 MB · 直接覆盖安装 · 打卡记录保留</div>
+  <div class="card primary">
+    <h2>用浏览器打开<span class="badge">推荐先试</span></h2>
+    <p class="desc">不需要装任何东西，点开就能用。有声音、有进度、数据存在本机。</p>
+    <a class="btn" href="./app/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M12 3a15 15 0 0 1 0 18"/><path d="M12 3a15 15 0 0 0 0 18"/></svg>
+      打开网页版
+    </a>
+  </div>
 
   <div class="sec">
-    <h2>装完先做这一步</h2>
+    <h3>让浏览器出声，注意这三点</h3>
     <div class="step">
       <div class="num">1</div>
-      <p>打开手机<b>设置</b>，顶部搜索框里搜 <b>文字转语音</b>。<br>
-      <span class="path">小米红米 <b>更多设置 › 无障碍 › 文字转语音</b></span>
-      <span class="path">华为荣耀 <b>辅助功能 › 无障碍 › 文字转语音</b></span>
-      <span class="path">OPPO vivo <b>其他设置 › 无障碍 › 文字转语音</b></span>
-      </p>
+      <p>别用微信里打开的页面，点右上角<b>三个点</b>选<b>在浏览器打开</b>，用 Chrome 或手机自带浏览器。</p>
     </div>
     <div class="step">
       <div class="num">2</div>
-      <p>看首选引擎是不是 <b>Google 文字转语音</b>，然后点 <b>安装语音数据</b>，选 <b>英语</b>，下载<b>英语（美国）</b>。</p>
+      <p>第一次点朗读如果没声音，<b>先点一下屏幕空白处</b>再点朗读。浏览器要求先有用户操作才允许发声。</p>
     </div>
     <div class="step">
       <div class="num">3</div>
-      <p>回到 App，进<b>英语页</b>，点最下面的 <b>「朗读没声音，点这里自检」</b>。显示可用发音 1 个以上就正常了。</p>
+      <p>确认手机<b>媒体音量</b>开着，不是静音。侧键调的是铃声音量，媒体音量要单独调。</p>
     </div>
   </div>
 
-  <div class="warn">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-    <p>如果提示<b>签名冲突装不上</b>，要先把旧版卸载。卸载前先进 App 看一眼这个月打卡天数，<b>记下来</b>，不然本地记录会清掉。</p>
+  <div class="note">
+    网页版能出声，再考虑装安装包。<b>网页版不能出声，装包也没有意义</b>，这是这次最重要的判断顺序。
   </div>
 
-  <div class="sec">
-    <h2>搜不到文字转语音怎么办</h2>
-    <p class="q">说明手机里没装语音引擎。去应用商店搜 <b>Google 文字转语音</b>，装上再回去做下一步。</p>
-    <p class="q">装好还是没声音，点<b>自检按钮</b>，把弹窗那几行字截图发给我。上面会写清楚卡在哪一层，是引擎没起来、没装英文包，还是系统拦了播放。</p>
+  <div class="card">
+    <h2>加到手机桌面</h2>
+    <p class="desc">打开网页版后，浏览器菜单里找「添加到主屏幕」，以后像 App 一样点图标进入，不用每次输网址。</p>
+  </div>
+
+  <div class="card">
+    <h2>安装包版本<span class="badge">可选</span></h2>
+    <p class="desc">如果更想要独立图标，可以下载安装包。但请先在浏览器里确认能出声。</p>
+    <a class="btn ghost" href="./">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></svg>
+      查看安装包下载
+    </a>
   </div>
 
   <footer>
     莫欺少年 · 五年级 · 2026 年 10 月<br>
-    哥哥用的是苹果系统，自带语音包，所以一直正常
+    网页版数据保存在本机浏览器，换浏览器数据不互通
   </footer>
 
 </div>
