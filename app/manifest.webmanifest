@@ -1,0 +1,11 @@
+{
+  "name": "莫欺少年",
+  "short_name": "莫欺少年",
+  "description": "每日学习打卡终端 · 五年级",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06070d",
+  "theme_color": "#06070d"
+}
