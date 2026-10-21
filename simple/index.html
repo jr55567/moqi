@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>能不能出声</title>
+<style>
+body{margin:0;padding:20px;background:#0b0e14;color:#dfe6f0;
+     font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;font-size:16px}
+h1{font-size:20px;margin:0 0 6px}
+.sub{font-size:13px;color:#7d8798;margin-bottom:20px}
+.big{display:block;width:100%;padding:26px;border:0;border-radius:14px;
+     font-size:22px;font-weight:800;margin-bottom:14px;
+     background:linear-gradient(92deg,#00e5ff,#63f2d0);color:#07101a}
+.big:active{opacity:.75}
+.big2{background:linear-gradient(92deg,#ff2d78,#ff8a4d);color:#fff}
+.box{background:#151a24;border-radius:12px;padding:15px;margin-bottom:12px;
+     border-left:3px solid #2a3242;font-size:14px;line-height:1.6}
+.k{font-size:12px;color:#8b97a8}
+.v{font-weight:700;font-size:15px;word-break:break-all}
+.ok{color:#5ee0a8}.bad{color:#ff6b6b}.warn{color:#ffc857}
+.out{background:#0f141d;border:1px solid #232c3a;border-radius:10px;padding:12px;
+     font-size:11.5px;font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap;
+     color:#9fb0c9;max-height:240px;overflow:auto;margin-top:12px;line-height:1.6}
+</style>
+</head>
+<body>
+<h1>能不能出声</h1>
+<div class="sub">超简单测试，两个按钮，都点一下</div>
+
+<button class="big" id="b1">点这里，读一句英文</button>
+<button class="big big2" id="b2">再点这里，读一句中文</button>
+
+<div class="box">
+  <div class="k">浏览器是否支持朗读接口</div>
+  <div class="v" id="s1">检测中</div>
+</div>
+<div class="box">
+  <div class="k">系统语音列表数量</div>
+  <div class="v" id="s2">检测中</div>
+</div>
+<div class="box">
+  <div class="k">最近一次播放结果</div>
+  <div class="v" id="s3">还没测</div>
+</div>
+
+<div class="out" id="log">日志…</div>
+
+<script>
+var L = [];
+function log(s){
+  L.push(s);
+  var el = document.getElementById('log');
+  el.textContent = L.join('\n');
+  el.scrollTop = 9e9;
+}
+
+var has = ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+document.getElementById('s1').textContent = has ? '支持' : '不支持';
+document.getElementById('s1').className = 'v ' + (has ? 'ok' : 'bad');
+log('接口支持: ' + has);
+log('UA: ' + navigator.userAgent);
+
+function voices(){
+  try { return speechSynthesis.getVoices() || []; } catch(e){ return []; }
+}
+function showCount(){
+  var n = voices().length;
+  var el = document.getElementById('s2');
+  el.textContent = n + ' 个';
+  el.className = 'v ' + (n ? 'ok' : 'warn');
+  return n;
+}
+showCount();
+setTimeout(showCount, 800);
+setTimeout(showCount, 2500);
+
+function speak(text, lang, tag){
+  var st = document.getElementById('s3');
+  if (!has) { st.textContent = '浏览器不支持'; st.className = 'v bad'; return; }
+  log('--- ' + tag + ' 开始 ---');
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.9;
+    u.volume = 1;
+
+    var r = { start: false, end: false, err: null };
+    u.onstart = function(){ r.start = true; log(tag + ' onstart 触发了'); };
+    u.onend = function(){ r.end = true; log(tag + ' onend 播完'); };
+    u.onerror = function(e){
+      r.err = e.error;
+      log(tag + ' onerror: ' + e.error);
+    };
+
+    speechSynthesis.speak(u);
+    log(tag + ' 已调用 speak');
+
+    setTimeout(function(){
+      var msg;
+      if (r.err) {
+        msg = '报错: ' + r.err;
+        st.className = 'v bad';
+      } else if (r.start) {
+        msg = '已发声，听不到请调媒体音量';
+        st.className = 'v ok';
+      } else {
+        msg = '无任何响应，系统没接管';
+        st.className = 'v bad';
+      }
+      st.textContent = msg;
+      log(tag + ' 结果: ' + msg + ' | speaking=' + speechSynthesis.speaking);
+    }, 2500);
+  } catch(e) {
+    st.textContent = '异常: ' + e.message;
+    st.className = 'v bad';
+    log(tag + ' 异常: ' + e.message);
+  }
+}
+
+document.getElementById('b1').onclick = function(){
+  speak('Hello. This is a test.', 'en-US', '英文');
+};
+document.getElementById('b2').onclick = function(){
+  speak('你好，这是测试。', 'zh-CN', '中文');
+};
+
+log('页面已加载');
+</script>
+</body>
+</html>
