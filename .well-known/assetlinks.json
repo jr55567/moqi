@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.moqi.study.twa",
+      "sha256_cert_fingerprints": [
+        "0A:56:B8:20:D1:E0:FA:AF:CA:15:65:84:EA:D1:FC:71:F6:74:3C:B0:2A:9A:77:A7:31:E5:87:4C:5E:2C:94:70"
+      ]
+    }
+  }
+]
