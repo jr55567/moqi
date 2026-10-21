@@ -93,13 +93,17 @@ if(k&&k.speak){
    完全照搬已验证可用的写法：
    不调用 getVoices、不指定 voice、只在正在播时才 cancel。
    这三点是暑假版能在小米上出声的关键。 */
-if(!("speechSynthesis"in window)){
-  P("这个浏览器不支持朗读，请换 Chrome 或系统浏览器");
+/* 检测方式放宽：某些 WebView 里 "in window" 返回 false 但接口可用 */
+var _synth=null;
+try{ _synth=(typeof window!=="undefined"&&window.speechSynthesis)?window.speechSynthesis:null; }catch(e){ _synth=null; }
+if(!_synth){ try{ _synth=(typeof speechSynthesis!=="undefined")?speechSynthesis:null; }catch(e){ _synth=null; } }
+if(!_synth){
+  P("这个浏览器没有朗读功能，换 Chrome 或 Edge 试试");
   done("no-synth");
   return;
 }
 try{
-  var synth=window.speechSynthesis;
+  var synth=_synth;
   /* 只在确实正在播时才 cancel，避免打断刚发出的请求 */
 
   var hasEN=/[a-zA-Z]{2,}/.test(txt);
