@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<script>window.__BUILD="web-20261021b";</script>
+<script>window.__BUILD="web-20261021c";</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06070d">
@@ -105,14 +105,30 @@ function webSpeak(attempt){
     if(TTSPROBE.voiceStart===undefined){TTSPROBE.voiceStart=Date.now();}
     var waited = Date.now() - TTSPROBE.voiceStart;
     if(waited < 8000){
-      window.__voiceCb = function(){ webSpeak(attempt); };
-      setTimeout(function(){ N(); if(y.length){webSpeak(attempt);} }, 400);
+      /* 加锁：事件回调和轮询只允许一个真正继续，避免重复朗读 */
+      if(!window.__voicePending){
+        window.__voicePending = 1;
+        window.__voiceCb = function(){
+          if(!window.__voicePending) return;
+          window.__voicePending = 0;
+          webSpeak(attempt);
+        };
+        setTimeout(function(){
+          if(!window.__voicePending) return;
+          N();
+          if(y.length){
+            window.__voicePending = 0;
+            webSpeak(attempt);
+          }
+        }, 400);
+      }
       if(attempt === 0){
         P("正在加载语音，稍等 1 到 2 秒会自动朗读");
       }
       /* 8 秒超时兜底 */
       setTimeout(function(){
         if(!y.length && TTSPROBE.last !== "no-voice"){
+          window.__voicePending = 0;
           TTSPROBE.last = "no-voice";
           P("这台手机系统里没有语音引擎，不是浏览器的问题");
           done("no-voice");
