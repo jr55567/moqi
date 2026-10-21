@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>朗读对照测试</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:16px;background:#0b0e14;color:#dfe6f0;
+     font-family:-apple-system,"PingFang SC","HarmonyOS Sans","Microsoft YaHei",sans-serif;
+     font-size:15px;line-height:1.6}
+h1{font-size:18px;margin:0 0 4px}
+.sub{font-size:12px;color:#7d8798;margin-bottom:16px}
+.card{background:#151a24;border-radius:12px;padding:14px;margin-bottom:11px;
+      border-left:3px solid #2a3242}
+.card h2{font-size:14px;margin:0 0 4px;font-weight:700}
+.card .desc{font-size:11.5px;color:#8b97a8;margin:0 0 10px;line-height:1.5}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:9px;
+     font-size:15px;font-weight:700;
+     background:linear-gradient(92deg,#00e5ff,#63f2d0);color:#07101a}
+.btn:active{opacity:.8}
+.res{font-size:12px;margin-top:9px;color:#7d8798;font-family:ui-monospace,Menlo,monospace;
+     white-space:pre-wrap;line-height:1.55}
+.ok{color:#5ee0a8}.bad{color:#ff6b6b}
+.log{background:#0f141d;border:1px solid #232c3a;border-radius:10px;
+     padding:11px;font-size:11px;font-family:ui-monospace,Menlo,monospace;
+     white-space:pre-wrap;color:#8b97a8;max-height:200px;overflow:auto;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>朗读对照测试</h1>
+<div class="sub">依次点三个按钮，哪个出声了就告诉我第几个</div>
+
+<div class="card">
+  <h2>① 最简写法（暑假版同款）</h2>
+  <p class="desc">不设任何参数，只给文本和 lang，让系统自己挑音色</p>
+  <button class="btn" data-t="1">点这里试听</button>
+  <div class="res" id="r1">未测试</div>
+</div>
+
+<div class="card">
+  <h2>② 指定默认音色</h2>
+  <p class="desc">用语音列表里的第一个音色</p>
+  <button class="btn" data-t="2">点这里试听</button>
+  <div class="res" id="r2">未测试</div>
+</div>
+
+<div class="card">
+  <h2>③ 中文语境读英文</h2>
+  <p class="desc">lang 设成 zh-CN，读英文字母</p>
+  <button class="btn" data-t="3">点这里试听</button>
+  <div class="res" id="r3">未测试</div>
+</div>
+
+<div class="log" id="log">日志…</div>
+
+<script>
+var logs = [];
+function log(s){
+  logs.push('[' + new Date().toISOString().slice(11,19) + '] ' + s);
+  document.getElementById('log').textContent = logs.join('\n');
+  document.getElementById('log').scrollTop = 9e9;
+}
+
+var support = {
+  synth: 'speechSynthesis' in window,
+  utter: 'SpeechSynthesisUtterance' in window,
+};
+log('speechSynthesis=' + support.synth + ' Utterance=' + support.utter);
+log('UA=' + navigator.userAgent);
+
+function getVoices(){
+  try { return speechSynthesis.getVoices() || []; } catch(e){ return []; }
+}
+var vs = getVoices();
+log('初始语音数=' + vs.length);
+if (support.synth) {
+  speechSynthesis.onvoiceschanged = function(){
+    var v = getVoices();
+    log('voiceschanged → ' + v.length + ' 个');
+  };
+}
+setTimeout(function(){ log('1秒后语音数=' + getVoices().length); }, 1000);
+setTimeout(function(){ log('3秒后语音数=' + getVoices().length); }, 3000);
+
+var TEXT = 'Hello, this is a test. 你好，这是测试。';
+
+function run(n){
+  var box = document.getElementById('r' + n);
+  box.className = 'res';
+  box.textContent = '播放中…';
+  if (!support.synth || !support.utter) {
+    box.className = 'res bad';
+    box.textContent = '浏览器不支持朗读接口';
+    return;
+  }
+  log('=== 测试 ' + n + ' 开始 ===');
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(TEXT);
+    u.rate = 0.9;
+    u.volume = 1;
+
+    if (n === 1) {
+      /* 最简：只设 lang */
+      u.lang = 'en-US';
+      log('写法1: 只设 lang=en-US');
+    } else if (n === 2) {
+      var list = getVoices();
+      log('写法2: 语音列表 ' + list.length + ' 个');
+      if (list.length) { u.voice = list[0]; u.lang = list[0].lang; log('  用 ' + list[0].name + ' / ' + list[0].lang); }
+      else { u.lang = 'en-US'; log('  列表为空，退回只设 lang'); }
+    } else {
+      u.lang = 'zh-CN';
+      log('写法3: lang=zh-CN');
+    }
+
+    var st = { start:false, end:false, err:null };
+    u.onstart = function(){ st.start = true; log('  onstart'); };
+    u.onend = function(){ st.end = true; log('  onend'); };
+    u.onerror = function(e){ st.err = e.error; log('  onerror=' + e.error); };
+
+    speechSynthesis.speak(u);
+    log('  speak() 已调用');
+
+    setTimeout(function(){
+      var msg = 'start=' + st.start + ' end=' + st.end + ' err=' + (st.err || '无');
+      box.textContent = msg;
+      box.className = 'res ' + ((st.err || !st.start) ? 'bad' : 'ok');
+      log('  2秒后: ' + msg + ' | speaking=' + speechSynthesis.speaking);
+    }, 2000);
+  } catch(e) {
+    box.className = 'res bad';
+    box.textContent = '异常: ' + e.message;
+    log('  异常: ' + e.message);
+  }
+}
+
+document.querySelectorAll('.btn').forEach(function(b){
+  b.addEventListener('click', function(){ run(parseInt(b.getAttribute('data-t'), 10)); });
+});
+</script>
+</body>
+</html>
