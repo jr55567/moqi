@@ -5,173 +5,196 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>语音诊断</title>
 <style>
-body{margin:0;padding:20px;background:#0b0e14;color:#dfe6f0;
-     font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
-     font-size:15px;line-height:1.7}
-h1{font-size:19px;margin:0 0 4px}
-.sub{font-size:12px;color:#7d8798;margin-bottom:16px}
-.row{background:#151a24;border-radius:10px;padding:12px 14px;margin-bottom:9px;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:18px;background:#0b0e14;color:#dfe6f0;
+     font-family:-apple-system,"PingFang SC","HarmonyOS Sans","Microsoft YaHei",sans-serif;
+     font-size:15px;line-height:1.65}
+h1{font-size:19px;margin:0 0 3px}
+.sub{font-size:12px;color:#7d8798;margin-bottom:14px}
+.row{background:#151a24;border-radius:10px;padding:11px 13px;margin-bottom:8px;
      border-left:3px solid #2a3242}
-.k{font-size:12px;color:#8b97a8;margin-bottom:2px}
-.v{font-size:15px;font-weight:700;word-break:break-all}
+.k{font-size:11.5px;color:#8b97a8;margin-bottom:2px}
+.v{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.5}
 .ok{color:#5ee0a8}.bad{color:#ff6b6b}.warn{color:#ffc857}
 .btn{display:block;width:100%;padding:15px;border:0;border-radius:11px;
-     font-size:16px;font-weight:700;margin-top:14px;
+     font-size:16px;font-weight:700;margin-top:12px;
      background:linear-gradient(92deg,#00e5ff,#63f2d0);color:#07101a}
-.out{margin-top:14px;background:#0f141d;border:1px solid #232c3a;border-radius:10px;
-     padding:12px;font-size:12px;font-family:ui-monospace,Menlo,monospace;
-     white-space:pre-wrap;color:#9fb0c9;max-height:260px;overflow:auto}
+.btn2{background:#1e2836;color:#c3cfdf;margin-top:9px}
+.out{margin-top:12px;background:#0f141d;border:1px solid #232c3a;border-radius:10px;
+     padding:11px;font-size:11.5px;font-family:ui-monospace,Menlo,monospace;
+     white-space:pre-wrap;color:#9fb0c9;max-height:280px;overflow:auto;line-height:1.6}
+h2{font-size:13px;color:#00e5ff;margin:18px 0 8px;letter-spacing:.06em}
 </style>
 </head>
 <body>
 <h1>语音诊断</h1>
-<div class="sub">看看这台手机到底缺什么</div>
+<div class="sub">打开后别动，等 10 秒看结果</div>
 
-<div id="list"></div>
-<button class="btn" id="test">点一下测试发声</button>
-<div class="out" id="out">等待…</div>
+<h2>① 浏览器能力</h2>
+<div id="caps"></div>
+
+<h2>② 语音列表（自动等待 10 秒）</h2>
+<div id="voices"></div>
+
+<h2>③ 实际发声测试</h2>
+<button class="btn" id="t1">测试英文朗读</button>
+<button class="btn btn2" id="t2">测试中文朗读</button>
+<div class="out" id="out">等待中…</div>
 
 <script>
-var L = document.getElementById('list');
-var O = document.getElementById('out');
-var logLines = [];
-function log(s){ logLines.push(s); O.textContent = logLines.join('\n'); }
+var out = document.getElementById('out');
+var lines = [];
+function log(s){ lines.push(s); out.textContent = lines.join('\n'); out.scrollTop = 9e9; }
 
-function row(key, val, cls){
+function row(box, k, v, cls){
   var d = document.createElement('div');
   d.className = 'row';
-  d.innerHTML = '<div class="k">' + key + '</div><div class="v ' + (cls||'') + '">' + val + '</div>';
-  L.appendChild(d);
+  d.innerHTML = '<div class="k">'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div>';
+  box.appendChild(d);
+  return d;
 }
 
-// 1. 基础能力
+var caps = document.getElementById('caps');
+var vbox = document.getElementById('voices');
+
+// ① 能力检测
 var hasSynth = ('speechSynthesis' in window);
-row('浏览器语音接口', hasSynth ? '存在' : '不存在', hasSynth ? 'ok' : 'bad');
-row('浏览器 UA', navigator.userAgent.slice(0, 60));
+var hasUtter = ('SpeechSynthesisUtterance' in window);
+row(caps, 'speechSynthesis 接口', hasSynth ? '存在' : '不存在', hasSynth ? 'ok' : 'bad');
+row(caps, 'SpeechSynthesisUtterance', hasUtter ? '存在' : '不存在', hasUtter ? 'ok' : 'bad');
+row(caps, '浏览器', navigator.userAgent.slice(0, 70));
 
-var utter = ('SpeechSynthesisUtterance' in window);
-row('朗读单元接口', utter ? '存在' : '不存在', utter ? 'ok' : 'bad');
+var voices = [];
+var eventCount = 0;
+var t0 = Date.now();
 
-// 2. 语音列表（含事件监听 + 长等待）
-var got = [];
-var eventFired = 0;
-var startTime = Date.now();
-
-function refresh(){
-  try { got = speechSynthesis.getVoices() || []; } catch(e){ got = []; }
-  return got;
+function read(){
+  try { voices = speechSynthesis.getVoices() || []; } catch(e){ voices = []; }
+  return voices;
 }
 
-if (hasSynth) {
-  refresh();
-  if (speechSynthesis.addEventListener) {
-    speechSynthesis.addEventListener('voiceschanged', function(){
-      eventFired++;
-      refresh();
-      log('voiceschanged 触发第 ' + eventFired + ' 次，数量=' + got.length);
-      render();
-    });
-  }
-  speechSynthesis.onvoiceschanged = function(){
-    eventFired++;
-    refresh();
-    log('onvoiceschanged 触发，数量=' + got.length);
-    render();
-  };
-}
+var vRow = row(vbox, '可用语音数量', '检测中…', 'warn');
 
-var voiceBox;
-function render(){
-  refresh();
-  if (!voiceBox) {
-    voiceBox = document.createElement('div');
-    voiceBox.className = 'row';
-    L.appendChild(voiceBox);
-  }
-  var cls = got.length ? 'ok' : 'bad';
-  var txt = got.length ? (got.length + ' 个') : '0 个（语音列表为空）';
-  voiceBox.innerHTML = '<div class="k">可用语音数量</div><div class="v ' + cls + '">' + txt + '</div>';
+function paint(){
+  read();
+  var n = voices.length;
+  vRow.className = 'row';
+  vRow.innerHTML = '<div class="k">可用语音数量</div><div class="v '+(n?'ok':'bad')+'">'+
+    (n ? n+' 个' : '0 个') + '</div>';
 
-  // 列出前 8 个语音
   var old = document.getElementById('vlist');
   if (old) old.remove();
-  if (got.length) {
+
+  if (n) {
     var box = document.createElement('div');
     box.id = 'vlist';
     box.className = 'out';
-    box.textContent = got.slice(0, 8).map(function(v, i){
-      return (i+1) + '. ' + v.name + ' | ' + v.lang + (v.localService ? ' | 本地' : ' | 在线');
+    box.textContent = voices.slice(0,10).map(function(v,i){
+      return (i+1)+'. '+v.name+'\n   lang='+v.lang+'  local='+v.localService+'  default='+v.default;
     }).join('\n');
-    L.appendChild(box);
+    vbox.appendChild(box);
+    var en = voices.filter(function(v){ return /^en/i.test(v.lang); }).length;
+    var zh = voices.filter(function(v){ return /^zh|cmn/i.test(v.lang); }).length;
+    row(vbox, '语言分布', '英文 '+en+' 个 / 中文 '+zh+' 个 / 其他 '+(n-en-zh)+' 个',
+        (en?'ok':'warn'));
   }
 }
 
-render();
+if (hasSynth) {
+  read(); paint();
+  if (speechSynthesis.addEventListener) {
+    speechSynthesis.addEventListener('voiceschanged', function(){
+      eventCount++; read(); paint();
+      log('['+((Date.now()-t0)/1000).toFixed(1)+'s] voiceschanged #'+eventCount+' → '+voices.length+' 个');
+    });
+  }
+  speechSynthesis.onvoiceschanged = function(){
+    eventCount++; read(); paint();
+    log('['+((Date.now()-t0)/1000).toFixed(1)+'s] onvoiceschanged #'+eventCount+' → '+voices.length+' 个');
+  };
+}
 
-// 持续刷新 8 秒
-var tick = 0;
+// 轮询 10 秒
+var poll = 0;
 var timer = setInterval(function(){
-  tick++;
-  refresh();
-  render();
-  log('第' + tick + '次轮询 (' + (Date.now()-startTime) + 'ms): ' + got.length + ' 个, 事件触发 ' + eventFired + ' 次');
-  if (tick >= 16 || got.length > 0 && tick > 8) {
+  poll++; read(); paint();
+  if (poll % 4 === 0) log('['+((Date.now()-t0)/1000).toFixed(1)+'s] 轮询 #'+poll+' → '+voices.length+' 个, 事件 '+eventCount+' 次');
+  if (Date.now() - t0 > 10000) {
     clearInterval(timer);
-    var finalCount = got.length;
-    row('最终结论', finalCount ? '系统有语音可用' : '系统完全没有语音包',
-        finalCount ? 'ok' : 'bad');
+    read();
+    var final = voices.length;
+    row(vbox, '10 秒后结论',
+        final ? '系统有 '+final+' 个语音' : '系统里确实没有语音',
+        final ? 'ok' : 'bad');
+    if (!final) {
+      var hint = document.createElement('div');
+      hint.className = 'out';
+      hint.style.color = '#ffc857';
+      hint.textContent =
+        '如果是 0 个，请按顺序检查：\n' +
+        '1. 设置 → 辅助功能 → 无障碍 → 文字转语音（TTS）\n' +
+        '2. 首选引擎要选中一个（小艺/华为语音引擎）\n' +
+        '3. 看有没有「安装语音数据」，点进去下载中文和英文\n' +
+        '4. 部分机型还要在「语言与输入法」里开启朗读';
+      vbox.appendChild(hint);
+    }
   }
 }, 500);
 
-// 3. 实际发声测试
-document.getElementById('test').onclick = function(){
-  log('--- 开始测试发声 ---');
-  if (!hasSynth || !utter) {
-    log('这家浏览器不支持朗读接口，换 Chrome 或系统浏览器');
+// ③ 发声测试
+function testSpeak(tag, lang){
+  log('--- '+tag+' 测试开始 ---');
+  if (!hasSynth || !hasUtter) {
+    log('浏览器不支持朗读接口');
     return;
   }
-  refresh();
-  var u = new SpeechSynthesisUtterance('Hello, this is a test. 你好，这是一次测试。');
-  u.lang = 'en-US';
-  u.rate = 0.9;
-  u.volume = 1;
-  if (got.length) {
-    var en = null;
-    for (var i=0;i<got.length;i++){ if(/^en/i.test(got[i].lang)){ en = got[i]; break; } }
-    u.voice = en || got[0];
-    u.lang = u.voice.lang;
-    log('使用语音: ' + u.voice.name + ' (' + u.voice.lang + ')');
+  read();
+  var text = lang === 'zh' ? '你好，这是中文测试。' : 'Hello, this is an English test.';
+  var u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.9; u.volume = 1; u.pitch = 1;
+  u.lang = lang === 'zh' ? 'zh-CN' : 'en-US';
+
+  if (voices.length) {
+    var pick = null;
+    for (var i=0;i<voices.length;i++){
+      if (lang === 'zh' ? /^zh|cmn/i.test(voices[i].lang) : /^en/i.test(voices[i].lang)) { pick = voices[i]; break; }
+    }
+    if (!pick) pick = voices[0];
+    u.voice = pick; u.lang = pick.lang;
+    log('使用: '+pick.name+' ('+pick.lang+')');
   } else {
-    log('没有可用语音，直接尝试默认');
+    log('无语音列表，直接尝试');
   }
-  var fired = { start: false, end: false, error: null };
-  u.onstart = function(){ fired.start = true; log('onstart 触发 —— 真的开始播了'); };
-  u.onend = function(){ fired.end = true; log('onend 触发 —— 播完了'); };
-  u.onerror = function(e){ fired.error = e.error; log('onerror 触发 —— ' + e.error); };
+
+  var s = {start:false, end:false, err:null};
+  u.onstart = function(){ s.start = true; log('onstart ✓ 真的开始播'); };
+  u.onend = function(){ s.end = true; log('onend ✓ 播完'); };
+  u.onerror = function(e){ s.err = e.error; log('onerror ✗ '+e.error); };
+  u.onpause = function(){ log('onpause'); };
+  u.onresume = function(){ log('onresume'); };
+
   try {
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
-    log('speak() 已调用，等待回调…');
+    log('speak() 已调用');
   } catch(e) {
-    log('speak() 抛异常: ' + e.message);
+    log('speak() 抛异常: '+e.message);
   }
-  setTimeout(function(){
-    log('--- 2 秒后状态 ---');
-    log('start=' + fired.start + ' end=' + fired.end + ' error=' + fired.error);
-    log('speechSynthesis.speaking=' + speechSynthesis.speaking);
-    log('speechSynthesis.pending=' + speechSynthesis.pending);
-    log('speechSynthesis.paused=' + speechSynthesis.paused);
-    if (!fired.start && !fired.error) {
-      log('结论: 请求发出但完全没有响应 —— 系统层无语音引擎');
-    } else if (fired.error) {
-      log('结论: 引擎报错 ' + fired.error);
-    } else if (fired.start) {
-      log('结论: 引擎正常发声，没听到请检查媒体音量');
-    }
-  }, 2000);
-};
 
-log('诊断已启动，语音列表异步加载中…');
+  setTimeout(function(){
+    log('--- 2 秒后 ---');
+    log('start='+s.start+' end='+s.end+' error='+s.err);
+    log('speaking='+speechSynthesis.speaking+' pending='+speechSynthesis.pending+' paused='+speechSynthesis.paused);
+    if (s.err) log('→ 引擎报错: '+s.err);
+    else if (s.start) log('→ 引擎已发声，听不到请查媒体音量');
+    else log('→ 请求无任何响应，系统层没接管');
+  }, 2000);
+}
+
+document.getElementById('t1').onclick = function(){ testSpeak('英文','en'); };
+document.getElementById('t2').onclick = function(){ testSpeak('中文','zh'); };
+
+log('诊断启动');
 </script>
 </body>
 </html>
