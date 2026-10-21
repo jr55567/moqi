@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<script>window.__BUILD="web-20261021";console.log("BUILD",window.__BUILD);</script>
+<script>window.__BUILD="web-20261021b";</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06070d">
@@ -87,13 +87,41 @@ function webSpeak(attempt){
   attempt = attempt || 0;
   N();
   if(!y.length){
-    if(attempt < 4){
-      /* 语音列表是异步加载的，等一会儿再试 */
-      setTimeout(function(){ webSpeak(attempt + 1); }, 350);
+    /* 首次调用 getVoices 常为空，系统是异步加载的。
+       同时用 voiceschanged 事件 + 轮询，最长等 8 秒 */
+    if(!window.__voiceWait){
+      window.__voiceWait = 1;
+      if(speechSynthesis.addEventListener){
+        speechSynthesis.addEventListener("voiceschanged",function(){
+          N();
+          if(y.length && window.__voiceCb){var cb=window.__voiceCb;window.__voiceCb=null;cb();}
+        });
+      }
+      speechSynthesis.onvoiceschanged = function(){
+        N();
+        if(y.length && window.__voiceCb){var cb=window.__voiceCb;window.__voiceCb=null;cb();}
+      };
+    }
+    if(TTSPROBE.voiceStart===undefined){TTSPROBE.voiceStart=Date.now();}
+    var waited = Date.now() - TTSPROBE.voiceStart;
+    if(waited < 8000){
+      window.__voiceCb = function(){ webSpeak(attempt); };
+      setTimeout(function(){ N(); if(y.length){webSpeak(attempt);} }, 400);
+      if(attempt === 0){
+        P("正在加载语音，稍等 1 到 2 秒会自动朗读");
+      }
+      /* 8 秒超时兜底 */
+      setTimeout(function(){
+        if(!y.length && TTSPROBE.last !== "no-voice"){
+          TTSPROBE.last = "no-voice";
+          P("这台手机系统里没有语音引擎，不是浏览器的问题");
+          done("no-voice");
+        }
+      }, 8200 - waited);
       return;
     }
-    TTSPROBE.last="no-voice";
-    P("系统没装语音包，浏览器朗读不可用");
+    TTSPROBE.last = "no-voice";
+    P("这台手机系统里没有语音引擎，不是浏览器的问题");
     done("no-voice");
     return;
   }
@@ -104,7 +132,6 @@ function webSpeak(attempt){
     var v=TTSEN();
     if(v){a.voice=v;a.lang=v.lang||"en-US";}
     else{
-      /* 没有英文音色就用第一个可用音色，至少能出声 */
       a.voice=y[0];a.lang=y[0].lang||a.lang;
       if(!TTSPROBE.warnedEn){TTSPROBE.warnedEn=1;P("现在用其他音色读英文，口音会重");}
     }
