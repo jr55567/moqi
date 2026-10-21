@@ -3,83 +3,142 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>环境检测</title>
+<title>环境检测 v2</title>
 <style>
-body{margin:0;padding:18px;background:#000;color:#eee;font-family:sans-serif;font-size:15px}
-h1{font-size:19px;margin:0 0 4px}
-p{color:#888;font-size:12px;margin:0 0 16px}
-.box{background:#141414;border-radius:10px;padding:12px;margin-bottom:8px}
-.k{color:#777;font-size:11px}
-.v{font-weight:bold;font-size:15px;word-break:break-all;line-height:1.4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:18px;background:#000;color:#eee;
+     font-family:-apple-system,"PingFang SC","HarmonyOS Sans","Microsoft YaHei",sans-serif;
+     font-size:15px;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+p{color:#888;font-size:12.5px;margin:0 0 16px}
+.box{background:#141414;border-radius:10px;padding:13px;margin-bottom:9px}
+.k{color:#777;font-size:11.5px;margin-bottom:3px}
+.v{font-weight:700;font-size:15.5px;word-break:break-all;line-height:1.45}
 .ok{color:#3f6}.bad{color:#f55}.w{color:#fa3}
-button{display:block;width:100%;padding:22px;margin:14px 0 8px;border:0;border-radius:12px;
-       font-size:19px;font-weight:bold;background:#0af;color:#000}
+.warnbox{background:#2a1a00;border:1px solid #5a3a00;border-radius:12px;
+         padding:15px;margin:14px 0;font-size:14px;line-height:1.7;color:#ffc857}
+.warnbox b{color:#ffe14d}
+.warnbox ol{margin:8px 0 0;padding-left:20px}
+.warnbox li{margin-bottom:6px}
+button{display:block;width:100%;padding:20px;margin:12px 0;border:0;border-radius:12px;
+       font-size:18px;font-weight:800;background:#0af;color:#000}
+button:active{opacity:.8}
 pre{background:#0a0a0a;border:1px solid #222;border-radius:8px;padding:12px;
-    font-size:11px;color:#888;white-space:pre-wrap;max-height:320px;overflow:auto;margin-top:14px}
+    font-size:11px;color:#888;white-space:pre-wrap;max-height:220px;overflow:auto;margin-top:14px}
 </style>
 </head>
 <body>
 <h1>环境检测</h1>
-<p>先看这几行，再点按钮</p>
+<p id="sub">正在检测…</p>
 
-<div class="box"><div class="k">你现在用的浏览器</div><div class="v" id="r1">检测中</div></div>
-<div class="box"><div class="k">是否微信内置浏览器</div><div class="v" id="r2">检测中</div></div>
-<div class="box"><div class="k">朗读接口是否可用</div><div class="v" id="r3">检测中</div></div>
-<div class="box"><div class="k">系统语音数量</div><div class="v" id="r4">检测中</div></div>
-<div class="box"><div class="k">点击结果</div><div class="v" id="r5">还没点</div></div>
+<div id="warn"></div>
+
+<div class="box"><div class="k">当前浏览器</div><div class="v" id="r1">-</div></div>
+<div class="box"><div class="k">是否微信内置</div><div class="v" id="r2">-</div></div>
+<div class="box"><div class="k">朗读接口 speechSynthesis</div><div class="v" id="r3">-</div></div>
+<div class="box"><div class="k">朗读单元 SpeechSynthesisUtterance</div><div class="v" id="r4">-</div></div>
+<div class="box"><div class="k">系统语音数量</div><div class="v" id="r5">-</div></div>
 
 <button id="go">点这里测试发声</button>
 
-<pre id="log"></pre>
+<pre id="log">日志…</pre>
 
 <script>
-var L=[];
-function log(s){L.push(s);document.getElementById('log').textContent=L.join('\n');}
+var LOG = [];
+function log(s){
+  LOG.push(s);
+  document.getElementById('log').textContent = LOG.join('\n');
+}
 
 var ua = navigator.userAgent;
 log('UA: ' + ua);
 
-/* 1. 是否微信 */
+/* --- 1. 浏览器识别 --- */
 var isWX = /MicroMessenger/i.test(ua);
-var e2 = document.getElementById('r2');
-e2.textContent = isWX ? '是（微信内置浏览器）' : '不是，普通浏览器';
-e2.className = 'v ' + (isWX ? 'bad' : 'ok');
+var isXWeb = /XWEB/i.test(ua);
 
-/* 2. 浏览器类型 */
-var browser = '未知';
-if (/MicroMessenger/i.test(ua)) browser = '微信';
-else if (/HuaweiBrowser|HarmonyOS/i.test(ua)) browser = '华为浏览器';
-else if (/MiuiBrowser|XiaoMi/i.test(ua)) browser = '小米浏览器';
-else if (/Chrome/i.test(ua)) browser = 'Chrome 内核';
-else if (/Safari/i.test(ua)) browser = 'Safari';
-document.getElementById('r1').textContent = browser;
-document.getElementById('r1').className = 'v ' + (isWX ? 'bad' : 'ok');
+var brand = '未知浏览器';
+if (isWX) brand = '微信' + (isXWeb ? '（XWeb 内核）' : '');
+else if (/HuaweiBrowser/i.test(ua)) brand = '华为浏览器';
+else if (/MiuiBrowser|XiaoMi/i.test(ua)) brand = '小米浏览器';
+else if (/Chrome/i.test(ua)) brand = 'Chrome 内核浏览器';
+else if (/Safari/i.test(ua)) brand = 'Safari';
 
-/* 3. 朗读接口 */
-var has = ('speechSynthesis' in window);
-document.getElementById('r3').textContent = has ? '存在' : '不存在';
-document.getElementById('r3').className = 'v ' + (has ? 'ok' : 'bad');
-log('speechSynthesis: ' + has);
+document.getElementById('r1').textContent = brand;
+document.getElementById('r2').textContent = isWX ? '是' : '否';
+document.getElementById('r2').className = 'v ' + (isWX ? 'bad' : 'ok');
 
-/* 4. 语音数量 */
-function cnt(){
-  try {
-    var n = speechSynthesis.getVoices().length;
-    var el = document.getElementById('r4');
-    el.textContent = n + ' 个';
-    el.className = 'v ' + (n ? 'ok' : 'w');
-    return n;
-  } catch(e) { return -1; }
+/* --- 2. 接口检测（关键：微信里是 false）--- */
+var hasSynth = ('speechSynthesis' in window) && (typeof window.speechSynthesis === 'object') && (window.speechSynthesis !== null);
+var hasUtter = ('SpeechSynthesisUtterance' in window) && (typeof window.SpeechSynthesisUtterance === 'function');
+
+document.getElementById('r3').textContent = hasSynth ? '存在 ✓' : '不存在 ✗';
+document.getElementById('r3').className = 'v ' + (hasSynth ? 'ok' : 'bad');
+document.getElementById('r4').textContent = hasUtter ? '存在 ✓' : '不存在 ✗';
+document.getElementById('r4').className = 'v ' + (hasUtter ? 'ok' : 'bad');
+
+log('speechSynthesis: ' + hasSynth);
+log('SpeechSynthesisUtterance: ' + hasUtter);
+
+/* --- 3. 结论与引导 --- */
+var warn = document.getElementById('warn');
+var sub = document.getElementById('sub');
+
+if (!hasSynth) {
+  /* 接口根本不存在 */
+  if (isWX) {
+    sub.textContent = '微信里没有朗读功能，请看下面的解决办法';
+    warn.innerHTML =
+      '<div class="warnbox">' +
+      '<b>微信内置浏览器不支持朗读</b><br>' +
+      '这不是手机坏了，是微信把朗读功能关掉了。<br>' +
+      '同一个小米手机，用浏览器打开就能出声。' +
+      '<ol>' +
+      '<li>点右上角的 <b>···</b></li>' +
+      '<li>选 <b>在浏览器打开</b></li>' +
+      '<li>在浏览器里再点一次测试</li>' +
+      '</ol>' +
+      '</div>';
+  } else {
+    sub.textContent = '这个浏览器没有朗读功能';
+    warn.innerHTML = '<div class="warnbox">换个浏览器试试：<b>Chrome</b>、<b>小米浏览器</b>、<b>Edge</b></div>';
+  }
+  document.getElementById('r5').textContent = '无法检测（接口不存在）';
+  document.getElementById('r5').className = 'v bad';
+  document.getElementById('go').textContent = '接口不存在，点了也没用';
+  document.getElementById('go').disabled = true;
+  document.getElementById('go').style.opacity = '.35';
+} else {
+  sub.textContent = '接口正常，可以测试发声';
+  /* 只有接口存在才去读语音数量 */
+  function cnt(){
+    try {
+      var n = window.speechSynthesis.getVoices().length;
+      var el = document.getElementById('r5');
+      el.textContent = n + ' 个';
+      el.className = 'v ' + (n ? 'ok' : 'w');
+      log('语音数量: ' + n);
+      return n;
+    } catch(e) {
+      document.getElementById('r5').textContent = '读取失败';
+      log('读语音失败: ' + e.message);
+      return -1;
+    }
+  }
+  cnt();
+  setTimeout(cnt, 600);
+  setTimeout(cnt, 1800);
+  setTimeout(cnt, 3500);
 }
-cnt();
-setTimeout(cnt, 600);
-setTimeout(cnt, 1500);
-setTimeout(cnt, 3000);
 
-/* 5. 发声测试 */
+/* --- 4. 发声测试 --- */
 document.getElementById('go').onclick = function(){
   var box = document.getElementById('r5');
-  if (!has) { box.textContent = '接口不存在'; box.className = 'v bad'; return; }
+  if (!hasSynth || !hasUtter) {
+    box.textContent = '接口不存在';
+    box.className = 'v bad';
+    return;
+  }
   log('--- 开始测试 ---');
   try {
     var u = new SpeechSynthesisUtterance('测试 hello test');
@@ -87,30 +146,31 @@ document.getElementById('go').onclick = function(){
     u.rate = 0.9;
     u.volume = 1;
 
-    var r = {s:false,e:false,x:null};
-    u.onstart = function(){ r.s=true; log('onstart ✓'); };
-    u.onend = function(){ r.e=true; log('onend ✓'); };
-    u.onerror = function(ev){ r.x=ev.error; log('onerror: ' + ev.error); };
+    var r = { s: false, e: false, x: null };
+    u.onstart = function(){ r.s = true; log('onstart ✓'); };
+    u.onend = function(){ r.e = true; log('onend ✓'); };
+    u.onerror = function(ev){ r.x = ev.error; log('onerror: ' + ev.error); };
 
-    speechSynthesis.speak(u);
+    window.speechSynthesis.speak(u);
     log('speak 已调用');
 
     setTimeout(function(){
       var m, c;
-      if (r.x) { m='报错: '+r.x; c='bad'; }
-      else if (r.s) { m='出声了 ✓'; c='ok'; }
-      else { m='无响应，微信可能屏蔽了'; c='bad'; }
+      if (r.x) { m = '报错: ' + r.x; c = 'bad'; }
+      else if (r.s) { m = '出声了 ✓'; c = 'ok'; }
+      else { m = '无响应'; c = 'bad'; }
       box.textContent = m;
       box.className = 'v ' + c;
-      log('→ ' + m);
-      log('speaking=' + speechSynthesis.speaking);
-    }, 2500);
+      log('结果: ' + m);
+    }, 2600);
   } catch(e) {
     box.textContent = '异常 ' + e.message;
     box.className = 'v bad';
+    log('异常: ' + e.message);
   }
 };
-log('加载完成');
+
+log('检测完成');
 </script>
 </body>
 </html>
