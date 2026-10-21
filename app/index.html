@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<script>window.__BUILD="web-20261021c";</script>
+<script>window.__BUILD="web-20261021d";</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06070d">
@@ -17,6 +17,7 @@
 !function(){"use strict";function t(t,n,r){for(var o=n+(t()*(r-n+1)|0);0===o;)o=n+(t()*(r-n+1)|0);return o}function n(t,n){var r=function(t){var n=Number(t);return isNaN(n)?String(t):Math.abs(n-Math.round(n))<1e-9?String(Math.round(n)):String(Math.round(1e4*n)/1e4)},o=[r(t)],a={};a[o[0]]=1;for(var i=0;i<n.length&&o.length<4;i++){var e=r(n[i]);a[e]||(a[e]=1,o.push(e))}for(var u=1;o.length<4;){var _=r(Number(t)+u*u);a[_]||(a[_]=1,o.push(_)),u++}return o}function r(t){return String(Math.round(1e4*t)/1e4)}function o(t){return(Math.round(100*t)/100).toString()}var a={};function i(t){var n,r=(n=104729*(t+3)>>>0,function(){n=1831565813+(n|=0)|0;var t=Math.imul(n^n>>>15,1|n);return(((t^=t+Math.imul(t^t>>>7,61|t))^t>>>14)>>>0)/4294967296}),o=[],i=t<8?0:t<16?1:t<24?2:3;return 0===i?o.push(a.decMul(r),a.decMul(r),a.word(r),a.decMul(r),a.approx(r),a.decMul(r)):1===i?o.push(a.decDiv(r),a.decDiv(r),a.position(r),a.word(r),a.decMul(r),a.decDiv(r)):2===i?o.push(a.repeating(r),a.approx(r),a.rounding(r),a.word(r),a.decDiv(r),a.rounding(r)):o.push(a.equation(r),a.equation(r),a.equation(r),a.word(r),a.rounding(r),a.repeating(r)),o.forEach(function(t){if("choice"===t.type){for(var n=t.opts.map(function(t,n){return{o:t,right:0===n}}),o=n.length-1;o>0;o--){var a=r()*(o+1)|0,i=n[o];n[o]=n[a],n[a]=i}t.opts=n.map(function(t){return t.o}),t.a=n.findIndex(function(t){return t.right})}}),{topic:t<8?"小数乘法":t<16?"小数除法与位置":t<24?"循环小数与应用":"简易方程衔接",qs:o}}function e(t){var n=window.CN5_POOL[t%window.CN5_POOL.length],r=window.ENG5_POOL[t%window.ENG5_POOL.length],o=i(t);return{mt:o.topic,math:o.qs,ct:n.topic,cn:n.qs,et:r.topic,eng:r.data}}a.decMul=function(o){var a=2+(8*o()|0),i=t(o,1,9),e=i/10,u=a*e;return{type:"choice",tag:"小数乘法",q:"计算："+a+" × "+e+" = ______",opts:n(r(u),[r(10*u),r(u/10),r(a+e)]),a:0,sol:"先按整数算 "+a+" × "+i+" = "+a*i+"，因数里共有 1 位小数，从积右边起数 1 位点小数点，得 "+r(u)+"。积的小数位数 = 因数小数位数之和。"}},a.decDiv=function(o){for(var a=t(o,2,9),i=t(o,1,9),e=t(o,2,8),u=a+i/10;Math.abs(u/e*100-Math.round(u/e*100))>1e-9;)a=t(o,2,9),i=t(o,1,9),e=t(o,2,8),u=a+i/10;var _=Math.round(u/e*100)/100;return{type:"choice",tag:"小数除法",q:"计算："+r(u)+" ÷ "+e+" = ______",opts:n(r(_),[r(10*_),r(_/10),r(_+e)]),a:0,sol:"按整数除法算，商的小数点和被除数的小数点对齐。"+r(u)+" ÷ "+e+" = "+r(_)+"。验算 "+r(_)+" × "+e+" = "+r(u)+"。"}},a.approx=function(a){var i=2+(7*a()|0),e=t(a,11,99)/100,u=i*e;return{type:"choice",tag:"积的近似值",q:"计算 "+i+" × "+e+"，结果保留两位小数是______",opts:n(o(u),[r(Math.round(u)),o(Math.floor(100*u)/100),r(Math.round(1e3*u)/1e3)]),a:0,sol:"先算 "+i+" × "+e+" = "+r(u)+"，保留两位小数看第三位，四舍五入得 "+o(u)+"。"}},a.repeating=function(t){var r=[{q:"下列各数中是循环小数的是______",opts:n("5.333…（3循环）",["3.1415926…","0.101001000…（每段多一个0）","6.28"]),a:0,sol:"循环小数要满足小数部分从某一位起一个或几个数字依次不断重复出现。5.333… 的 3 不断重复，是循环小数；π 不循环，0.101001000… 每次多一个 0，也不重复。"},{q:"把 0.777…（7循环）保留两位小数是______",opts:n("0.78",["0.77","0.8","0.7"]),a:0,sol:"保留两位小数看第三位是 7，满五进一，得 0.78。循环小数取近似值同样用四舍五入。"},{q:"4.32727…（27循环）的循环节是______",opts:n("27",["7","327","72"]),a:0,sol:"依次不断重复出现的数字是 2 和 7，循环节是 27。写循环小数时在 2 和 7 上各点一个循环点。"},{q:"循环小数一定是______",opts:n("无限小数",["有限小数","整数","最简分数"]),a:0,sol:"小数分有限小数和无限小数，无限小数又分循环和不循环（如 π）。循环小数是无限小数的一种。"}],o=r[t()*r.length|0];return{type:"choice",tag:"循环小数",q:o.q,opts:o.opts,a:0,sol:o.sol}},a.rounding=function(t){if(t()<.5){var n=40+(55*t()|0),o=n/2.5,a=Math.ceil(o);return{type:"fill",im:"num",tag:"进一法",q:"每个瓶子最多装 2.5 千克油，"+n+" 千克油至少需要多少个瓶子？",a:String(a),accept:[String(a)],sol:n+" ÷ 2.5 = "+r(o)+"，余下的油也必须装瓶，所以进一，至少 "+a+" 个。装东西、租车、租船用进一法。"}}var i=25+(30*t()|0),e=i/2.2,u=Math.floor(e);return{type:"fill",im:"num",tag:"去尾法",q:"包装一个礼盒要用 2.2 米丝带，"+i+" 米丝带最多能包装多少个礼盒？",a:String(u),accept:[String(u)],sol:i+" ÷ 2.2 = "+r(e)+"，剩下的丝带不够再包装一个，去尾，最多 "+u+" 个。做衣服、包装礼盒用去尾法。"}},a.position=function(t){var r=1+(8*t()|0),o=3+(5*t()|0);return t()<.5?{type:"choice",tag:"数对",q:"小军坐在教室第 "+r+" 列第 "+o+" 行，用数对表示是______",opts:n("("+r+","+o+")",["("+o+","+r+")",r+"，"+o,"("+(r+1)+","+o+")"]),a:0,sol:"数对 (列, 行)：先列后行。第 "+r+" 列第 "+o+" 行写作 ("+r+","+o+")，竖排为列、横排为行，顺序别记反。"}:{type:"choice",tag:"数对",q:"点A的位置是 ("+r+","+o+")，点A正前方第一个位置是______",opts:n("("+r+","+(o-1)+")",["("+r+","+(o+1)+")","("+(r+1)+","+o+")","("+(r-1)+","+o+")"]),a:0,sol:"面向黑板，正前方是行数减 1，列不变。("+r+","+o+") 的正前方是 ("+r+","+(o-1)+")。第一个数管左右、第二个数管前后。"}},a.word=function(t){var n=3*t()|0;if(0===n){var a=2+(6*t()|0)+.5,i=3+(6*t()|0),e=o(a*i);return{type:"fill",im:"num",tag:"购物应用",q:"每支笔 "+r(a)+" 元，买 "+i+" 支一共要多少元？",a:e,accept:[e],sol:"单价×数量=总价。"+r(a)+" × "+i+" = "+e+"（元）。先按整数乘法算，再点小数点。"}}if(1===n){var u=20+(60*t()|0),_=1+(4*t()|0)+.5,c=Math.floor(u/_);return{type:"fill",im:"num",tag:"购物应用",q:"一本笔记本 "+r(_)+" 元，"+u+" 元最多能买多少本？",a:String(c),accept:[String(c)],sol:u+" ÷ "+r(_)+" = "+r(u/_)+"，剩下的钱不够再买一本，去尾，最多 "+c+" 本。"}}var p=60+(40*t()|0),s=1.5+.5*(2*t()|0),l=r(p*s);return{type:"fill",im:"num",tag:"行程应用",q:"一辆汽车每小时行 "+p+" 千米，"+r(s)+" 小时行多少千米？",a:l,accept:[l],sol:"速度×时间=路程。"+p+" × "+r(s)+" = "+l+"（千米）。"}},a.equation=function(t){var r=3*t()|0,o=2+(9*t()|0),a=2+(5*t()|0),i=1+(9*t()|0);if(0===r){var e=a*o+i;return{type:"fill",im:"num",tag:"解方程",q:"解方程："+a+"x + "+i+" = "+e+"，x = ______",a:String(o),accept:[String(o)],sol:"把 "+a+"x 看成整体。两边同减 "+i+"："+a+"x = "+(e-i)+"；两边同除以 "+a+"：x = "+o+"。验算 "+a+"×"+o+"+"+i+"="+e+"。等式两边同加减乘除同一个数（0除外），等式仍成立。"}}if(1===r){var u=a*o-i;return{type:"fill",im:"num",tag:"解方程",q:"解方程："+a+"x - "+i+" = "+u+"，x = ______",a:String(o),accept:[String(o)],sol:"两边同加 "+i+"："+a+"x = "+(u+i)+"；两边同除以 "+a+"：x = "+o+"。验算 "+a+"×"+o+"-"+i+"="+u+"。"}}var _=3+(5*t()|0),c=2+(6*t()|0),p=_*o+c;return{type:"choice",tag:"列方程",q:"一本故事书 "+_+" 元，小明买了 "+o+" 本，付了 "+p+" 元，找回 "+c+" 元。下面数量关系正确的是______",opts:n("花的钱 + 找回 = 付的钱",["花的钱 - 找回 = 付的钱","付的钱 - 花的钱 = 找回 × 2","单价 + 数量 = 总价"]),a:0,sol:"花的钱是 "+_+"×"+o+"，加上找回的 "+c+" 元正好等于付出的 "+p+" 元。列方程先找等量关系："+_+"x + "+c+" = "+p+"。"}},window.APP={id:"moqi",name:"莫欺少年",sub:"GRADE 5 · CYBER STUDY TERMINAL",defaultReward:"一顿肯德基 + 两小时自由游戏时间",rangeText:"2026年10月1日 至 10月31日",baseDate:"2026-10-01",missions:[]};for(var u=0;u<31;u++)window.APP.missions.push(e(u))}();</script>
 <script>!function(){"use strict";if(window.APP){var t=function(t){return document.querySelector(t)},n=function(t){return Array.prototype.slice.call(document.querySelectorAll(t))},e=window.APP,a=e.parentPassword||"JR556677",i=e.questionsPerDay||6,s=e.readMinutes||15,c=60*s,d="neon-study-"+e.id,o=(e.baseDate||"").split("-"),r=3===o.length?new Date(+o[0],+o[1]-1,+o[2]):new Date((new Date).getFullYear(),(new Date).getMonth(),1),l=function(t){return(t<10?"0":"")+t},v=function(t){return t.getFullYear()+"-"+l(t.getMonth()+1)+"-"+l(t.getDate())},u=null,h=null;try{var p=new URLSearchParams(location.search);u=p.get("day"),h=p.get("pwtest")}catch(t){}var f=function(){return v(new Date)},g=function(){return u||f()},b=function(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")},m=function(t){return String(t).trim().toLowerCase().replace(/\s+/g,"").replace(/[。，、；：？！,;:?!]/g,"").replace(/％/g,"%").replace(/（/g,"(").replace(/）/g,")")},w={unlockUntil:0,rewardName:"",rewardGranted:{},monthTarget:26,days:{}};!function(){try{var t=localStorage.getItem(d);if(t){var n=JSON.parse(t);for(var e in n)w[e]=n[e]}}catch(t){}}();var k=function(){try{return window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.NeonTTS||null}catch(t){return null}}(),y=[],TTSPROBE={cap:0,ok:0,last:"",busy:0};"speechSynthesis"in window&&(N(),speechSynthesis.onvoiceschanged=N,setTimeout(N,300),setTimeout(N,1200));var E=null,L=function(){return Date.now()<w.unlockUntil};document.title=e.name+" · 每日学习终端",document.body.innerHTML='<div id="app"><header class="hud"><div class="hud-row"><div class="app-title">'+b(e.name)+"<small>"+b(e.sub)+'</small></div><span class="chip hot" id="chip-streak"></span></div><div class="xpbar"><i id="xp-fill"></i></div><div class="hud-sub"><span id="hud-level-name"></span><span id="hud-xp"></span></div></header><main id="main"></main><footer class="summary" id="summary"></footer></div><div class="overlay hide" id="overlay"><div class="modal" id="modal"></div></div><div id="toast"></div>';var x=t("#main"),T=!1,M=(new Date).getFullYear(),S=(new Date).getMonth(),D={};window.addEventListener("hashchange",V);var A=null;V()}else document.body.innerHTML='<p style="padding:40px;color:#fff">缺少 APP 配置</p>';function O(){try{localStorage.setItem(d,JSON.stringify(w))}catch(t){}}function H(t,n){if(!w.days[t]){if(!n)return null;w.days[t]={math:null,chinese:null,english:null,checked:!1}}return w.days[t]}function q(t){var n=function(t){var n=t.split("-"),e=new Date(+n[0],+n[1]-1,+n[2]);return Math.round((e-r)/864e5)}(t);if(n<0||n>=e.missions.length)return null;var a=e.missions[n],i={chineseTopic:a.ct,chinese:a.cn,englishTopic:a.et,english:a.eng};return i.mathTopic=a.mt,i.math=a.math,i}function N(){try{y=("speechSynthesis"in window?speechSynthesis.getVoices():[])||[]}catch(t){y=[]}try{TTSPROBE.cap=y.length}catch(t){}}function TTSEN(){for(var i=0;i<y.length;i++)if(/en[-_]US/i.test(y[i].lang))return y[i];for(var c=0;c<y.length;c++)if(/^en/i.test(y[c].lang))return y[c];return null}function TTSZH(){for(var i=0;i<y.length;i++)if(/zh[-_]CN|cmn/i.test(y[i].lang))return y[i];return null}function TTSSTATUS(){return{plugin:!!k,synth:"speechSynthesis"in window,voices:y.length,zh:!!TTSZH(),en:!!TTSEN()}}function C(t,n,e){
 var txt=String(t),rid="";
+window.__vStart=null;window.__vHint=0;
 function done(msg){
   if(msg){TTSPROBE.last=msg;}
   if(e){setTimeout(e,200);}
@@ -75,108 +76,84 @@ if(k&&k.speak){
   setTimeout(function(){done("");},Math.max(1200,95*txt.length));
   return;
 }
-/* ---- 原生不可用，退回浏览器语音 ---- */
-if(!("speechSynthesis"in window)){
+/* ---- 原生不可用，退回浏览器语音 ----
+   核心思路：不判断语音列表，直接 speak。
+   浏览器会在系统里自动挑一个语音，getVoices 为空不代表不能发声。 */
+if(!("speechSynthesis"in window) || !("SpeechSynthesisUtterance"in window)){
   TTSPROBE.last="no-synth";
-  P("这个浏览器不支持朗读，换 Chrome 或系统浏览器打开");
+  P("这个浏览器不支持朗读，请换 Chrome 或系统浏览器打开");
   done("no-synth");
   return;
 }
 
-function webSpeak(attempt){
-  attempt = attempt || 0;
+try{
+  speechSynthesis.cancel();
+
+  var a = new SpeechSynthesisUtterance(txt);
+  a.lang = "en-US";
+  a.rate = n || 0.85;
+  a.pitch = 1;
+  a.volume = 1;
+
+  /* 有语音列表就尽量挑英文的，没有就用默认 */
   N();
-  if(!y.length){
-    /* 首次调用 getVoices 常为空，系统是异步加载的。
-       同时用 voiceschanged 事件 + 轮询，最长等 8 秒 */
-    if(!window.__voiceWait){
-      window.__voiceWait = 1;
-      if(speechSynthesis.addEventListener){
-        speechSynthesis.addEventListener("voiceschanged",function(){
-          N();
-          if(y.length && window.__voiceCb){var cb=window.__voiceCb;window.__voiceCb=null;cb();}
-        });
-      }
-      speechSynthesis.onvoiceschanged = function(){
-        N();
-        if(y.length && window.__voiceCb){var cb=window.__voiceCb;window.__voiceCb=null;cb();}
-      };
-    }
-    if(TTSPROBE.voiceStart===undefined){TTSPROBE.voiceStart=Date.now();}
-    var waited = Date.now() - TTSPROBE.voiceStart;
-    if(waited < 8000){
-      /* 加锁：事件回调和轮询只允许一个真正继续，避免重复朗读 */
-      if(!window.__voicePending){
-        window.__voicePending = 1;
-        window.__voiceCb = function(){
-          if(!window.__voicePending) return;
-          window.__voicePending = 0;
-          webSpeak(attempt);
-        };
-        setTimeout(function(){
-          if(!window.__voicePending) return;
-          N();
-          if(y.length){
-            window.__voicePending = 0;
-            webSpeak(attempt);
-          }
-        }, 400);
-      }
-      if(attempt === 0){
-        P("正在加载语音，稍等 1 到 2 秒会自动朗读");
-      }
-      /* 8 秒超时兜底 */
-      setTimeout(function(){
-        if(!y.length && TTSPROBE.last !== "no-voice"){
-          window.__voicePending = 0;
-          TTSPROBE.last = "no-voice";
-          P("这台手机系统里没有语音引擎，不是浏览器的问题");
-          done("no-voice");
-        }
-      }, 8200 - waited);
-      return;
-    }
-    TTSPROBE.last = "no-voice";
-    P("这台手机系统里没有语音引擎，不是浏览器的问题");
-    done("no-voice");
-    return;
+  if(y.length){
+    var pick = TTSEN();
+    if(pick){ a.voice = pick; a.lang = pick.lang || "en-US"; }
+    else { a.voice = y[0]; a.lang = y[0].lang || a.lang; }
   }
-  try{
-    speechSynthesis.cancel();
-    var a=new SpeechSynthesisUtterance(txt);
-    a.lang="en-US";a.rate=n||0.85;a.pitch=1;a.volume=1;
-    var v=TTSEN();
-    if(v){a.voice=v;a.lang=v.lang||"en-US";}
-    else{
-      a.voice=y[0];a.lang=y[0].lang||a.lang;
-      if(!TTSPROBE.warnedEn){TTSPROBE.warnedEn=1;P("现在用其他音色读英文，口音会重");}
-    }
-    var finished=false;
-    function fin(msg){if(finished)return;finished=true;TTSPROBE.busy=0;done(msg||"");}
-    a.onstart=function(){TTSPROBE.ok++;TTSPROBE.last="web-started";};
-    a.onend=function(){fin("");};
-    a.onerror=function(ev){
-      var er=(ev&&ev.error)||"error";
-      if(er==="interrupted"||er==="canceled")return;
-      TTSPROBE.last="web:"+er;
-      if(er==="not-allowed"){fin(er);P("浏览器拦了朗读，先点一下屏幕任意位置再点朗读");}
-      else if(er==="voice-unavailable"){fin(er);P("这个音色不可用，换个语音包再试");}
-      else{fin(er);P("朗读失败 "+er);}
-    };
-    TTSPROBE.busy=1;
-    speechSynthesis.speak(a);
-    setTimeout(function(){
-      if(TTSPROBE.busy&&!finished){
-        TTSPROBE.busy=0;
-        if(attempt<2){webSpeak(attempt+1);}
-        else{fin("no-sound");P("没听到声音，再点一次或换 Chrome 试试");}
-      }
-    },3500);
-  }catch(err){
-    P("语音播放失败"); done("exception");
+
+  var finished = false;
+  function fin(msg){
+    if(finished) return;
+    finished = true;
+    TTSPROBE.busy = 0;
+    done(msg || "");
   }
+
+  a.onstart = function(){
+    TTSPROBE.ok++;
+    TTSPROBE.last = "web-started";
+  };
+  a.onend = function(){ fin(""); };
+  a.onerror = function(ev){
+    var er = (ev && ev.error) || "error";
+    if(er === "interrupted" || er === "canceled") return;
+    TTSPROBE.last = "web:" + er;
+    if(er === "not-allowed"){
+      fin(er);
+      P("浏览器拦了朗读，先点一下屏幕空白处，再点朗读");
+    } else if(er === "voice-unavailable"){
+      fin(er);
+      P("系统里没有可用语音，请到设置安装语音数据");
+    } else if(er === "synthesis-unavailable"){
+      fin(er);
+      P("系统语音服务不可用，重启手机试试");
+    } else if(er === "synthesis-failed"){
+      fin(er);
+      P("语音合成失败，换个浏览器试试");
+    } else {
+      fin(er);
+      P("朗读失败 " + er);
+    }
+  };
+
+  TTSPROBE.busy = 1;
+  speechSynthesis.speak(a);
+
+  /* 兜底：5 秒内没反应，说明系统层真的没接管 */
+  setTimeout(function(){
+    if(finished) return;
+    if(TTSPROBE.busy && !speechSynthesis.speaking && !speechSynthesis.pending){
+      fin("no-response");
+      P("系统没有响应朗读请求，请到设置搜索文字转语音安装语音数据");
+    }
+  }, 5000);
+
+}catch(err){
+  P("语音播放失败 " + (err && err.message ? err.message : ""));
+  done("exception");
 }
-webSpeak(0);
 }window.__TTS=C;window.__PROBE=TTSPROBE;function P(n){var e=t("#toast");e.textContent=n,e.classList.add("show"),clearTimeout(E),E=setTimeout(function(){e.classList.remove("show")},2400)}function I(n){t("#modal").innerHTML=n,t("#overlay").classList.remove("hide")}function _(){t("#overlay").classList.add("hide")}function R(n,e,i){I("<h3>"+b(n)+'</h3><div class="m-row">'+b(e)+'</div><div class="lock-row"><input type="password" id="m-pw" placeholder="家长密码" autocomplete="off"></div><div class="m-actions"><button class="btn warn" id="m-ok">确认</button><button class="btn ghost" id="m-cancel">取消</button></div>');var s=function(){t("#m-pw").value===a?(_(),i(!0)):(P("密码错误"),t("#m-pw").value="")};t("#m-ok").addEventListener("click",s),t("#m-pw").addEventListener("keydown",function(t){"Enter"===t.key&&s()}),t("#m-cancel").addEventListener("click",_)}function U(n,e,a,i){I("<h3>"+b(n)+'</h3><div class="m-row">'+b(e)+'</div><div class="lock-row"><input type="text" id="m-txt" placeholder="'+b(a)+'"></div><div class="m-actions"><button class="btn" id="m-ok">保存</button><button class="btn ghost" id="m-cancel">取消</button></div>'),t("#m-ok").addEventListener("click",function(){var n=t("#m-txt").value.trim();n?(_(),i(n)):P("先填内容")}),t("#m-cancel").addEventListener("click",_)}function Y(t){t===a?(w.unlockUntil=Date.now()+3e5,O(),P("家长已解锁 · 5 分钟内可查看全部解析"),V()):P("密码错误")}function j(t){return!(!t||!(t.math&&t.math.done||t.chinese&&t.chinese.done||t.english&&t.english.done))}function F(t){if(!t)return 0;var n=0;return t.math&&t.math.done&&n++,t.chinese&&t.chinese.done&&n++,t.english&&t.english.done&&n++,n}function G(){for(var t=function(){var t=0;return Object.keys(w.days).forEach(function(n){var e=w.days[n];t+=20*F(e),e.checked&&(t+=20)}),t}(),n=[[0,"赛博新生"],[160,"数据游侠"],[480,"霓虹骑士"],[960,"电流武士"],[1600,"量子猎人"],[2240,"电子传奇"]],e=0,a=0;a<n.length;a++)t>=n[a][0]&&(e=a);var i=n[e][0],s=e<n.length-1?n[e+1][0]:n[e][0]+1,c=e===n.length-1?100:Math.min(100,Math.round((t-i)/(s-i)*100));return{name:n[e][1],pct:c,xp:t}}function J(){var t=new Date,n=t.getFullYear()+"-"+l(t.getMonth()+1),e=0,a=0,i=0,s=0;return Object.keys(w.days).forEach(function(t){if(0===t.indexOf(n)){var c=w.days[t];c.checked?e++:j(c)&&a++,["math","chinese"].forEach(function(t){c[t]&&(i+=(c[t].right||[]).length,s+=(c[t].right||[]).length+(c[t].wrong||[]).length)})}}),{key:n,done:e,partial:a,acc:s?Math.round(i/s*100):0}}function K(t){location.hash=t}function V(){/* 不再调 k.stop()：切页会把刚发出的朗读掐断 */try{"speechSynthesis"in window&&speechSynthesis.cancel()}catch(t){}var e=(location.hash||"#overview").replace("#","");"math"===e||"chinese"===e?function(e){var a=g(),s=q(a);if(!s)return x.innerHTML='<div style="margin-bottom:12px"><button class="btn ghost mini" id="btn-back">‹ 返回总览</button></div><div class="card">当前日期没有任务包</div>',void Z();var c=s[e],d=function(t,n){var e=H(t,!0);return e[n]||(e[n]={done:!1,right:[],wrong:[],locked:{},ans:{},att:{}}),e[n]}(a,e),o="math"===e?"数学 MATH":"语文 CHINESE",r='<div style="margin-bottom:12px"><button class="btn ghost mini" id="btn-back">‹ 返回总览</button></div>';r+='<div class="sect"><div class="sect-head">'+o+" · 今日"+i+"题 · "+b("math"===e?s.mathTopic:s.chineseTopic)+"</div>",d.done&&(r+='<div class="fb ok show" style="margin:0 0 12px">本组任务已完成 ✓ 今日正确 '+d.right.length+"/"+i+(d.wrong.length?" · 有 "+d.wrong.length+" 题需要订正":"")+"</div>");for(var l=0;l<c.length;l++)r+=B(c[l],l,d,e);r+="</div>";var v=c.every(function(t,n){return d.right.indexOf(n)>=0||d.locked[n]});d.done?(r+='<div class="qactions" style="margin-top:4px"><button class="btn ghost" id="btn-redo">清空重做</button></div>',r+='<div class="set-hint" style="text-align:center">已完成 · 答对的题思路点拨已展开，可翻看复习</div>'):r+='<button class="btn big '+(v?"solidok":"")+'" id="btn-finish"'+(v?"":" disabled")+">完成本组任务</button>";x.innerHTML=r,function(e,a,i){var s=t("#btn-back");s&&s.addEventListener("click",function(){K("overview")});t("#btn-finish")&&t("#btn-finish").addEventListener("click",function(){i.done=!0,O(),X(),P("本组任务完成"),V()});var c=t("#btn-redo");c&&c.addEventListener("click",function(){R("清空重做","将清空本组题目的作答记录，重新开始。",function(){H(g(),!0)[e]={done:!1,right:[],wrong:[],locked:{},ans:{},att:{}},O(),P("已重置，重新开始"),V()})});function d(n){if(!(i.right.indexOf(n)>=0||i.locked[n])){var s=t('input[data-i="'+n+'"]'),c=(s?s.value:"").trim();if(c){var d=a[n],o=d.accept?d.accept.some(function(t){return m(t)===m(c)}):m(d.a)===m(c);delete D[n],Q(e,a,i,n,c,o)}else P("先填一个答案")}}n(".qopt").forEach(function(t){t.addEventListener("click",function(){var n=+t.getAttribute("data-i"),s=+t.getAttribute("data-j");i.right.indexOf(n)>=0||i.locked[n]||i.att[n]>=2||Q(e,a,i,n,s,s===a[n].a)})}),n("input[data-i]").forEach(function(t){t.addEventListener("input",function(){D[+t.getAttribute("data-i")]=t.value}),t.addEventListener("keydown",function(n){"Enter"===n.key&&d(+t.getAttribute("data-i"))})}),n("[data-check]").forEach(function(t){t.addEventListener("click",function(){d(+t.getAttribute("data-check"))})}),n("[data-unlock]").forEach(function(t){t.addEventListener("click",function(){var n=t.parentNode.querySelector("input[data-pw]");Y(n?n.value:"")})}),n("input[data-pw]").forEach(function(t){t.addEventListener("keydown",function(n){"Enter"===n.key&&Y(t.value)})})}(e,c,d),Z()}(e):"english"===e?function(){var e=g(),i=q(e);if(!i||!i.english)return x.innerHTML='<div style="margin-bottom:12px"><button class="btn ghost mini" id="btn-back">‹ 返回总览</button></div><div class="card">当前日期没有任务包</div>',void Z();var d=i.english,o=H(e,!0);o.english||(o.english={done:!1,secs:0});var r=o.english;O();var l='<div style="margin-bottom:12px"><button class="btn ghost mini" id="btn-back">‹ 返回总览</button></div>';l+='<div class="sect"><div class="sect-head">英语 ENGLISH · '+s+"分钟朗读 · "+b(i.englishTopic)+"</div>",l+='<div class="card eng"><div class="card-title">'+b(d.title)+'</div><div class="card-sub">'+b(d.intro||"")+"</div>",l+='<div class="reader">';for(var v=0;v<d.sents.length;v++){var u=d.sents[v];l+='<div class="sent" data-sent="'+v+'"><div class="spk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></div><div class="en">'+b(u.en)+'</div><div class="cn">'+b(u.cn)+"</div></div>"}l+="</div>",d.vocab&&d.vocab.length&&(l+='<div class="vocab"><div class="vocab-title">KEY WORDS · 点一下听发音</div><div class="vocab-list">',d.vocab.forEach(function(t){l+='<div class="vocab-item" data-word="'+b(t[0])+'"><b>'+b(t[0])+"</b><span>"+b(t[1])+"</span></div>"}),l+="</div></div>");l+='<div class="timerbar"><i id="timer-fill"></i></div>',l+='<div class="timer-num">已朗读 <b id="timer-min">'+Math.floor(r.secs/60)+"</b> / "+s+" 分钟 · 读满自动完成</div>",l+='<div class="qactions">',r.done||(l+='<button class="btn" id="btn-read-start">开始计时朗读</button>',l+='<button class="btn ghost" id="btn-read-pause" style="display:none">暂停</button>');l+='<button class="btn ghost" id="btn-speak-all">整篇连读</button>',l+="</div>",r.done?l+='<div class="fb ok show" style="margin-top:12px">朗读任务已完成 ✓ 建议明天继续，语感是读出来的。</div>':l+='<div class="fb info show" style="margin-top:12px">推荐步骤 · 1 整篇连读听一遍 · 2 逐句点读跟读 · 3 自己大声读2遍，读完保持计时。</div>';l+='<div style="text-align:center;margin-top:10px"><button class="btn ghost mini" id="btn-tts-check">朗读没声音，点这里自检</button></div>';l+="</div></div></div>",x.innerHTML=l,function(e,i){var d=t("#btn-back");d&&d.addEventListener("click",function(){K("overview")});var o=!1,r=t("#timer-fill"),l=t("#timer-min");function v(){var t=Math.min(100,i.secs/c*100);r.style.width=100-t+"%",l.textContent=Math.floor(i.secs/60)}function u(){i.done||(i.done=!0,i.secs=Math.max(i.secs,c),O(),clearInterval(A),A=null,X(),P("朗读任务完成，"+s+"分钟达成"),V())}v();var p=t("#btn-read-start"),f=t("#btn-read-pause");p&&p.addEventListener("click",function(){if(!o&&!i.done){o=!0;var t=h===a?30:1;p.style.display="none",f.style.display="",A=setInterval(function(){i.secs+=t,i.secs%15!=0&&i.secs%t!==0||O(),v(),i.secs>=c&&u()},1e3)}});f&&f.addEventListener("click",function(){o=!1,clearInterval(A),A=null,f.style.display="none",p.style.display="",O()});n(".sent").forEach(function(t){t.addEventListener("click",function(){var a=+t.getAttribute("data-sent");n(".sent").forEach(function(t){t.classList.remove("playing")}),t.classList.add("playing"),C(e.sents[a].en,.85,function(){t.classList.remove("playing")})})}),n(".vocab-item").forEach(function(t){t.addEventListener("click",function(){C(t.getAttribute("data-word"),.8)})});var g=t("#btn-speak-all");g&&g.addEventListener("click",function(){C(e.sents.map(function(t){return t.en}).join(" "),.9)});var tc=t("#btn-tts-check");tc&&tc.addEventListener("click",function(){var st=TTSSTATUS(),m=[];m.push("原生插件 "+(st.plugin?"已连接":"未连接，走系统语音"));m.push("系统语音引擎 "+(st.synth?"有":"没有"));m.push("可用发音 "+(st.voices?st.voices+" 个":"0 个，这就是没声音的原因"));m.push("英文音色 "+(st.en?"有":"缺失"));m.push("中文音色 "+(st.zh?"有":"缺失"));if(st.last)m.push("上次结果 "+st.last);m.push("成功朗读 "+(TTSPROBE.ok||0)+" 次");if(k&&k.status){try{k.status().then(function(s){TTSPROBE.native=s;var extra="原生 就绪="+(s.ready?"是":"否")+" 状态码="+s.initStatus+" 英文="+(s.langOk?"可用":"缺失")+" 音色="+s.voice+" 语音数="+s.platformVoiceCount+(s.engine?" 引擎="+s.engine:"");var n2=document.getElementById("tts-native-line");if(n2)n2.textContent=extra;})}catch(t){}}I('<h3>朗读自检</h3><div class=\"m-row\" style=\"line-height:2\">' + m.join('<br>') + '<div id=\"tts-native-line\" style=\"opacity:.75\"></div><div class=\"m-row\" style=\"font-size:12px;opacity:.7\">看第一行，原生已连接就说明插件正常，剩下的是语音包问题。</div><div class=\"m-actions\"><button class=\"btn\" id=\"m-ok\">知道了</button><button class=\"btn ghost\" id=\"m-try\">试读一句</button></div>');var a1=document.getElementById("m-ok");a1&&a1.addEventListener("click",_);var a2=document.getElementById("m-try");a2&&a2.addEventListener("click",function(){_();window.__TTS&&window.__TTS("Hello. This is a reading test.",.85)})})}(d,r),Z()}():W(),window.scrollTo(0,0)}function W(){var a=g(),c=q(a),d=J(),o=function(){var t=0,n=new Date,e=w.days[f()];for(e&&e.checked||n.setDate(n.getDate()-1);;){var a=v(n);if(!w.days[a]||!w.days[a].checked)break;t++,n.setDate(n.getDate()-1)}return t}(),r=G();t("#chip-streak").innerHTML=o>0?"连击 <b>"+o+"</b> 天":"今日待打卡",t("#xp-fill").style.width=r.pct+"%",t("#hud-level-name").textContent=r.name,t("#hud-xp").textContent="XP "+r.xp;var u="";u+='<div class="hero-stats">',u+='<div class="hstat"><div class="n">'+d.done+'</div><div class="t">本月完成</div></div>',u+='<div class="hstat"><div class="n hot">'+o+'</div><div class="t">连续打卡</div></div>',u+='<div class="hstat"><div class="n pink">'+(d.acc||"--")+'</div><div class="t">本月正确率</div></div>',u+="</div>";var h=w.monthTarget||26,p=!!w.rewardGranted[d.key],m=w.rewardName||e.defaultReward;if(u+='<div class="sect"><div class="sect-head">月度奖励 MISSION REWARD</div><div class="reward-card">',u+='<div class="reward-title">本月奖励 · '+b(m)+(p?" · 已发放":"")+"</div>",u+='<div class="reward-progress">打卡目标 <b>'+d.done+"</b> / <b>"+h+"</b> 天"+(d.done>=h?" · 已达标":"")+"</div>",u+='<div class="reward-bar"><i style="width:'+Math.min(100,d.done/h*100)+'%"></i></div>',u+='<div class="reward-note">'+(p?"家长已确认发放。下个月继续加油，少年。":d.done>=h?"目标达成，请家长点下方按钮输入密码确认发放。":"每天三科全部完成自动打卡，月底达标即解锁奖励。")+"</div>",u+='<div class="reward-actions">',!p&&d.done>=h&&(u+='<button class="btn warn" id="btn-grant">家长确认发放</button>'),p||(u+='<button class="btn ghost mini" id="btn-reward-set">修改奖励名称</button>'),u+="</div></div></div>",u+='<div class="sect"><div class="sect-head">今日任务 TODAY · '+a+"</div>",c){var k=H(a,!1),y=!!(k&&k.english&&k.english.done),E=!!(k&&k.math&&k.math.done),T=!!(k&&k.chinese&&k.chinese.done);u+=z("english","英语 · "+s+"分钟朗读",c.english.title,y),u+=z("math","数学 · "+i+"题",c.mathTopic+" · 每题2次机会",E),u+=z("chinese","语文 · "+i+"题",c.chineseTopic,T)}else u+='<div class="card"><div class="card-title">本期任务包未生效</div><div class="card-sub">任务包覆盖 '+b(e.rangeText)+"，当前日期不在范围内。届时打开即自动加载当天任务。</div></div>";u+="</div>",u+='<div class="sect"><div class="sect-head">打卡日历 CALENDAR</div>'+function(){var t=new Date(M,S,1),n=new Date(M,S+1,0).getDate(),e=t.getDay(),a=g(),i='<div class="cal-head"><div class="cal-title">'+M+"年"+(S+1)+'月</div><div class="cal-nav">';i+='<button class="btn ghost mini" data-cal="prev">上月</button>',i+='<button class="btn ghost mini" data-cal="cur">本月</button>',i+='<button class="btn ghost mini" data-cal="next">下月</button></div></div>',i+='<div class="cal-grid">',["日","一","二","三","四","五","六"].forEach(function(t){i+='<div class="cal-dow">'+t+"</div>"});for(var s=0;s<e;s++)i+="<div></div>";for(var c=1;c<=n;c++){var d=M+"-"+l(S+1)+"-"+l(c),o=w.days[d],r=[];o&&o.checked?r.push("done"):o&&j(o)&&r.push("partial"),d===a&&r.push("today"),d>a&&r.push("future"),i+='<div class="cal-cell '+r.join(" ")+'"><span class="d">'+c+"</span>"+(o&&o.checked?'<span class="mk ok">✓</span>':o&&j(o)?'<span class="mk part">◐</span>':"")+"</div>"}return i+="</div>",i}()+"</div>",u+='<div class="sect"><div class="sect-head">家长面板 PARENT</div><div class="card" style="padding:6px 14px">',u+='<div class="set-row"><span class="lab">月底奖励</span><span class="setv"><span class="val">'+b(m)+'</span> <button class="btn ghost mini" data-act="set-reward">修改</button></span></div>',u+='<div class="set-row"><span class="lab">每月打卡目标</span><span class="setv"><span class="val">'+h+' 天</span> <button class="btn ghost mini" data-act="set-target">修改</button></span></div>',u+='<div class="set-row"><span class="lab">解析解锁状态</span><span class="setv">'+(L()?'<span class="val okv">已解锁 '+Math.ceil((w.unlockUntil-Date.now())/6e4)+' 分钟</span> <button class="btn ghost mini" data-act="relock">重新上锁</button>':'<span class="val">已锁定</span>')+"</span></div>",u+='<div class="set-row"><span class="lab">重置今日任务</span><button class="btn ghost mini" data-act="reset-today">清空重来</button></div>',u+='</div><div class="set-hint">答案与思路已上锁。每题有2次作答机会，两次都错会锁定该题，需家长输密码解锁订正。数据保存在本机浏览器。</div></div>',x.innerHTML=u,function(){n("[data-go]").forEach(function(t){t.addEventListener("click",function(){K(t.getAttribute("data-go"))})});var e=t("#btn-grant");e&&e.addEventListener("click",function(){R("确认发放奖励","发放后本月标记为已领取，请确认奖励已经兑现。",function(){w.rewardGranted[J().key]=!0,O(),P("奖励已发放，少年干得漂亮"),V()})});var a=t("#btn-reward-set");a&&a.addEventListener("click",function(){R("家长验证","设置月底奖励名称需要家长密码。",function(){U("设置月底奖励","写一个孩子真正想要的东西，动力才足。","例如 一顿肯德基 / 一场球赛 / 300元零花钱",function(t){w.rewardName=t,O(),P("奖励已更新"),V()})})});n("[data-act]").forEach(function(t){t.addEventListener("click",function(){var n=t.getAttribute("data-act");"set-reward"===n?R("家长验证","修改奖励名称需要家长密码。",function(){U("设置月底奖励","","例如 一顿肯德基 / 一场球赛 / 300元零花钱",function(t){w.rewardName=t,O(),P("奖励已更新"),V()})}):"set-target"===n?R("家长验证","修改每月打卡目标需要家长密码。",function(){U("每月打卡目标","填 1 到 31 之间的天数。","例如 26",function(t){var n=parseInt(t,10);n>=1&&n<=31?(w.monthTarget=n,O(),P("目标已更新为 "+n+" 天"),V()):P("请填 1 到 31 之间的数字")})}):"relock"===n?(w.unlockUntil=0,O(),P("已重新上锁"),V()):"reset-today"===n&&R("重置今日任务","将清空今天的全部答题记录和朗读进度，不可恢复。",function(){delete w.days[g()],O(),P("今日任务已重置"),V()})})}),n("[data-cal]").forEach(function(t){t.addEventListener("click",function(){var n=t.getAttribute("data-cal");if("prev"===n)--S<0&&(S=11,M--);else if("next"===n)++S>11&&(S=0,M++);else{var e=new Date;M=e.getFullYear(),S=e.getMonth()}W()})})}(),Z()}function z(t,n,e,a){return'<div class="card '+t+(a?" done":"")+'"><div class="card-head"><div><div class="card-title">'+b(n)+'</div><div class="card-sub">'+b(e)+'</div></div><div class="card-state">'+(a?"已完成 ✓":"待完成")+'</div></div><div class="task-enter"><button class="btn'+(a?" ghost":"")+'" data-go="'+t+'">'+(a?"进入复习":"开始任务")+"</button></div></div>"}function B(t,n,e,a){var s=function(t,n,e){return e.right.indexOf(n)>=0?"right":e.locked[n]?"locked":e.att[n]?"retry":"pending"}(0,n,e),c='<div class="card '+a+'" id="card-q'+n+'">';if(c+='<div class="qno">Q'+(n+1)+" / "+i+(t.tag?" · "+b(t.tag):"")+"</div>",c+='<div class="qtext">'+b(t.q).replace(/____+/g,'<span class="blank">______</span>')+"</div>","choice"===t.type){c+='<div class="qopts">';for(var d=0;d<t.opts.length;d++){var o="qopt",r=String.fromCharCode(65+d);"right"===s?o+=d===t.a?" right":" dimmed":"locked"===s&&(o+=d===e.ans[n]?" wrong":" dimmed"),c+='<div class="'+o+'" data-i="'+n+'" data-j="'+d+'"><span class="k">'+r+"</span><span>"+b(t.opts[d])+"</span></div>"}c+="</div>"}else{var l="pending"===s&&void 0!==D[n]?D[n]:void 0!==e.ans[n]?e.ans[n]:"",v="right"===s||"locked"===s?" disabled":"";c+='<div class="qinput"><input type="text" inputmode="'+("num"===t.im?"decimal":"text")+'" data-i="'+n+'" placeholder="输入答案" value="'+b(l)+'"'+v+">"+(v?"":'<button class="btn" data-check="'+n+'">提交</button>')+"</div>"}var u="";return"right"===s?u=["ok show","✓ 回答正确"]:"locked"===s?u=["err show","✗ 两次都没对，本题已锁定。请家长解锁后带你订正。"]:"retry"===s&&(u=["err show","✗ 不对，再想想。还剩最后 1 次机会。"]),c+='<div class="fb '+u[0]+'">'+u[1]+"</div>","right"===s?c+='<div class="sol show"><div class="sol-title">思路点拨 HOW TO THINK</div><div class="sol-body">'+b(t.sol)+"</div></div>":L()?c+='<div class="sol show"><div class="sol-title">家长已解锁 · 思路与答案</div><div class="sol-body">'+b(t.sol)+"</div></div>":c+='<div class="lock"><div class="lock-label">PARENT LOCK · 思路与答案</div><div class="lock-row"><input type="password" placeholder="家长密码" data-pw><button class="btn warn mini" data-unlock>解锁</button></div><div class="lock-hint">每题2次机会，答对自动展开思路，答错2次锁定。家长解锁后5分钟内可看全部解析。</div></div>',c+="</div>"}function Q(n,e,a,i,s,c){a.att[i]=(a.att[i]||0)+1,a.ans[i]=s,c?(a.right.indexOf(i)<0&&a.right.push(i),a.wrong=a.wrong.filter(function(t){return t!==i})):(a.wrong.indexOf(i)<0&&a.wrong.push(i),a.right=a.right.filter(function(t){return t!==i}),a.att[i]>=2&&(a.locked[i]=!0)),O(),V();var d=t("#card-q"+i);d&&d.scrollIntoView({behavior:"smooth",block:"center"}),Z()}function X(){var t=H(g(),!1);t&&t.math&&t.math.done&&t.chinese&&t.chinese.done&&t.english&&t.english.done&&!t.checked&&(t.checked=!0,t.checkedAt=Date.now(),O(),P("三科全齐，今日打卡成功！"))}function Z(){var n=g(),a=q(n),c=H(n,!1),d=J(),o=[];if(a){var r=c&&c.math,l=c&&c.chinese,v=c&&c.english;o.push(["数学",r&&r.done?a.mathTopic+" · "+i+"题完成 · 对 "+r.right.length+" 题":r&&Object.keys(r.att||{}).length?a.mathTopic+" · 进行中":a.mathTopic+" · 待完成"]),o.push(["语文",l&&l.done?a.chineseTopic+" · "+i+"题完成 · 对 "+l.right.length+" 题":l&&Object.keys(l.att||{}).length?a.chineseTopic+" · 进行中":a.chineseTopic+" · 待完成"]),o.push(["英语",v&&v.done?a.englishTopic+" · "+s+"分钟朗读完成":v&&v.secs?a.englishTopic+" · 已读 "+Math.floor(v.secs/60)+" 分钟":a.englishTopic+" · 待朗读"])}else o.push(["状态","本期任务包未生效 · "+e.rangeText]);var u=F(c),h='<div class="sum-head" id="sum-toggle"><span class="sum-title">今日学习总结 DAILY SUMMARY</span><span class="sum-chevron">'+(T?"▲ 收起":"▼ 展开")+"</span></div>";h+='<div class="sum-body'+(T?" open":"")+'"><div class="sum-grid">',o.forEach(function(t){h+='<div class="sum-row"><span class="sk">'+t[0]+'</span><span class="sv">'+b(t[1])+"</span></div>"}),h+='</div><div class="sum-foot"><span>今日进度 '+u+"/3</span><span>本月完成 "+d.done+" 天</span><span>"+(c&&c.checked?"今日已打卡 ✓":"打卡待完成")+"</span></div></div>",t("#summary").innerHTML=h,t("#sum-toggle").addEventListener("click",function(){T=!T,Z()})}}();</script>
 </body>
 </html>
